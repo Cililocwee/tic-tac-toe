@@ -51,6 +51,10 @@
     margin-right: 50px;
 }
 
-.selected {
+.exes-game-piece {
     background-color: red;
+}
+
+.ohes-game-piece {
+    background-color: yellow;
 }
