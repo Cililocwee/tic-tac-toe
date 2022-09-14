@@ -5,7 +5,6 @@ const debugging = (() => {
     return {print}    
 })();
 
-let gameplaying = true;
 let exPhase = false;
 let ohPhase = true;
 
@@ -19,19 +18,11 @@ const gameboard = (() => {
             } else if (ohPhase){
                 element.classList.add('ohes-game-piece')
             };
+            gamelogic.checkMatch();
+            gamestates.toggleState();
             })
             )
     }
-    /*
-    squareList.forEach(element =>
-        element.addEventListener('click', () => {
-            if (exPhase){
-            element.classList.add('exes-game-piece')
-        } else if (ohPhase){
-            element.classList.add('ohes-game-piece')
-        };
-        })
-        )*/
 
     return { populateBoard, squareList }
 })();
@@ -46,31 +37,36 @@ const gamestates = (() => {
                 exPhase = true;
             }
     }
-
-    const toggleswitch = document.querySelector('.ticktacky');
-    toggleswitch.addEventListener('click', () => {
-        gamestates.toggleState()
-        switch(ohPhase){
+    // this is just not working now
+    const signalState = (phase) => {
+        switch(phase){
             case true:
-                toggleswitch.style.backgroundColor="yellow";
+                explayer.style.backgroundColor="yellow";
+                ohplayer.style.backgroundColor="white";
                 break;
             case false:
-                toggleswitch.style.backgroundColor="red";
+                ohplayer.style.backgroundColor="red";
+                explayer.style.backgroundColor="white";
                 break;
             default:
                 toggleswitch.style.backgroundColor='white';
                 break;
-        };
+        }
+    }
+    const toggleswitch = document.querySelector('.ticktacky');
+    const explayer = document.querySelector('.exes');
+    const ohplayer = document.querySelector('.ohes');
+
+    toggleswitch.addEventListener('click', () => {
+        gamestates.toggleState()
     });
 
 
-    return {toggleState, toggleswitch}
+    return {toggleState, toggleswitch, signalState}
 })();
 
-
-// game logic
-
-const checkMatch = () =>{
+const gamelogic = (() => {
+    const checkMatch = () =>{
     const square1 = document.querySelector('.square1');
     const square2 = document.querySelector('.square2');
     const square3 = document.querySelector('.square3');
@@ -206,7 +202,9 @@ const checkMatch = () =>{
             }
         }
     }
-};
+    };
+    return { checkMatch }
+})();
 
 
 
