@@ -33,8 +33,21 @@ const gameboard = (() => {
         )*/
 
     return { populateBoard, squareList }
-})()
+})();
 
+const gamestates = (() => {
+    const toggleState= () => {
+            if (exPhase){
+                exPhase = false;
+                ohPhase = true;
+            } else if (ohPhase) {
+                ohPhase = false;
+                exPhase = true;
+            }
+    }
+
+    return {toggleState}
+})();
 
 
 gameboard.populateBoard(gameboard.squareList);
