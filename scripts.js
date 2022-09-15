@@ -8,33 +8,11 @@ const debugging = (() => {
 
 let exPhase = false;
 let ohPhase = true;
-let drawcount = 0;
 
 const gameboard = (() => {
 	const squareList = document.querySelectorAll(".square");
 	function populateBoard(nodelist) {
 		nodelist.forEach((element) =>
-			
-            // eventlistener version
-            /*element.addEventListener(
-				"click",
-				() => {
-					if (exPhase) {
-						//element.classList.remove("ohes-game-piece");
-						element.classList.add("exes-game-piece");
-					}
-					if (ohPhase) {
-						//element.classList.remove("exes-game-piece");
-						element.classList.add("ohes-game-piece");
-					}
-					drawcount += 1;
-					gamelogic.checkMatch();
-					gamestates.toggleState();
-					console.log(drawcount);
-					console.log(`exPhase: ${exPhase}, ohPhase: ${ohPhase}`);
-				},
-				{ once: true }
-			)*/
 
             // onclick version - can't get onclick to fall off
             element.onclick = () => {
@@ -48,11 +26,11 @@ const gameboard = (() => {
                     element.removeAttribute('onclick');
                 }
                 element.removeAttribute('onclick');
-                drawcount += 1;
                 gamelogic.checkMatch();
                 gamestates.toggleState();
-                console.log(drawcount);
-                console.log(`exPhase: ${exPhase}, ohPhase: ${ohPhase}`);
+                // for debuggin -- DO NOT DELETE
+                console.log(gamelogic.drawcount); 
+                // console.log(`exPhase: ${exPhase}, ohPhase: ${ohPhase}`);
                 
             }
 
@@ -68,7 +46,7 @@ const gameboard = (() => {
 		nodelist.forEach((element) => element.classList.remove("exes-game-piece"));
 		nodelist.forEach((element) => element.classList.remove("ohes-game-piece"));
 		populateBoard(squareList);
-		drawcount = 0;
+		gamelogic.drawcount = 0;
 		exPhase = false;
 		ohPhase = true;
 	}
@@ -77,7 +55,9 @@ const gameboard = (() => {
 })();
 
 const gamestates = (() => {
-	const toggleState = () => {
+	
+    
+    const toggleState = () => {
 		if (exPhase === true) {
 			exPhase = false;
 			ohPhase = true;
@@ -91,8 +71,12 @@ const gamestates = (() => {
 })();
 
 const gamelogic = (() => {
+    let drawcount = 0;
+
 	const checkMatch = () => {
-		const square1 = document.querySelector(".square1");
+		
+
+        const square1 = document.querySelector(".square1");
 		const square2 = document.querySelector(".square2");
 		const square3 = document.querySelector(".square3");
 		const square4 = document.querySelector(".square4");
@@ -101,7 +85,10 @@ const gamelogic = (() => {
 		const square7 = document.querySelector(".square7");
 		const square8 = document.querySelector(".square8");
 		const square9 = document.querySelector(".square9");
-
+        
+        const allthesquares = [ square1, square2, square3, 
+                                        square4, square5, square6, 
+                                        square7, square8, square9]
 		const row1 = [square1, square2, square3];
 		const row2 = [square4, square5, square6];
 		const row3 = [square7, square8, square9];
@@ -281,12 +268,16 @@ const gamelogic = (() => {
 
 		// draw
 		function isItADraw() {
-			
-            
-            if (drawcount >= 9) {
+			function drawTally(square){
+                if(square.classList.contains('exes-game-piece') || square.classList.contains('ohes-game-piece')){
+                    gamelogic.drawcount += 1;
+                }
+            }
+            allthesquares.forEach(drawTally)
+            if (gamelogic.drawcount >= 45) {
 				alert("Draw");
 				gameboard.clearBoard(gameboard.squareList);
-				drawcount = 0;
+				gamelogic.drawcount = 0;
 			}
 		}
 
@@ -295,7 +286,7 @@ const gamelogic = (() => {
 		isItADraw()
 	};
 
-	return { checkMatch };
+	return { checkMatch, drawcount };
 })();
 
 const scoresystem = (() => {
