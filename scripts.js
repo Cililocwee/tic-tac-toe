@@ -30,8 +30,7 @@ const gameboard = (() => {
     
     // clear the board
     const resetButton = document.querySelector('#reset-button');
-    const playingfield = document.querySelector('.gameboard');
-    //resetButton.addEventListener('click', (event) => clearBoard(squareList));
+    resetButton.addEventListener('click', (event) => clearBoard(squareList));
     function clearBoard(nodelist){
         nodelist.forEach(element => 
             element.classList.remove('exes-game-piece'));
@@ -39,6 +38,8 @@ const gameboard = (() => {
             element.classList.remove('ohes-game-piece'));
         populateBoard(squareList);
         drawcount = 0;
+        exPhase = false;
+        ohPhase = true;
     };
     
     return { populateBoard, squareList, clearBoard, resetButton }
@@ -240,13 +241,14 @@ const gamelogic = (() => {
             if(drawcount === 9){
                 alert('Draw');
                 gameboard.clearBoard(gameboard.squareList);
+                drawcount = 0;
             }
         }
             
         
         doesExWin()
         doesOhWin()
-        //isItADraw()
+        isItADraw()
         
     };
     
